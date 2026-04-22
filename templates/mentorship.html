@@ -37,7 +37,7 @@
   <!-- MAIN CARD -->
   <div class="card">
 
-    <h2>Mentorship Panel 🎯</h2>
+    <h2>📊 {{ data[2] }} Mentorship Panel 🎯</h2>
 
     {% if data == None %}
     <!-- 🔹 FORM -->
@@ -83,14 +83,20 @@
     <div id="mentorship-dashboard">
 
       <!-- Dynamic title -->
-      <h3>📊 {{ data[2] }} Membership</h3>
+      <div class="tab-bar">
 
-      <p><b>Exam:</b> {{ data[2] }}</p>
-      <p><b>Study Hours:</b> {{ data[3] }} hrs/day</p>
-      <p><b>Email:</b> {{ data[1] }}</p>
-      <p><b>Notification Time:</b> {{ data[4] }}</p>
-      <br>
+        <!-- <div class="tab"><h3>📊 {{ data[2] }} Membership</h3></div> -->
 
+        <div class="tab">Targat: {{ data[2] }} 🎯</div>
+        <div class="tab">Committed hours💡: {{ data[3] }} hrs/day</div>
+
+        <!-- <div class="tab">Email:<br> {{ data[1] }}</div> -->
+
+        <div class="tab">Start Time ⌛: {{ data[4] }}</div>
+        <br>
+      </div>
+
+      
       <!-- DELETE -->
       <form action="/delete_mentorship" method="POST">
         <button type="submit" class="danger-btn">❌ Delete Membership</button>
@@ -98,10 +104,10 @@
 
       <br>
 
-      <!-- RESET -->
+      <!-- RESET
       <form action="/reset_mentorship" method="POST">
         <button type="submit" class="secondary-btn">🔄 New Registration</button>
-      </form>
+      </form> -->
 
     </div>
     {% endif %}

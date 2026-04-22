@@ -582,8 +582,10 @@ li:hover {
 /* TAB */
 .tab {
   flex: 1;
+  display: inline-flex;
+  justify-content: center;
+  
   text-align: center;
-
   padding: 8px;
   border-radius: 10px;
 
