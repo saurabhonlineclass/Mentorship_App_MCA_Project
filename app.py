@@ -38,9 +38,16 @@ def init_db():
     exam TEXT,
     study_hours INTEGER,
     notify_time TEXT
-)''')
-    
+    )''')
 
+
+    c.execute('''CREATE TABLE IF NOT EXISTS progress(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user TEXT,
+    day_id INTEGER,
+    status TEXT
+    )''')
+       
 
     conn.commit()
     conn.close()
@@ -68,7 +75,7 @@ def register_page():
 @app.route('/dashboard')
 def dashboard():
     if "user" in session:
-        return render_template("dashboard.html", user=session["user"])
+        return render_template("dashboard.html", name=session.get('name'))
     return redirect('/')
 
 @app.route('/logout')
@@ -96,12 +103,30 @@ def mentorship():
     conn = sqlite3.connect("users.db")
     c = conn.cursor()
 
+    # mentorship data
     c.execute("SELECT * FROM mentorship WHERE user=?", (user,))
     data = c.fetchone()
 
+    # current plan
+    current_id = session.get("plan_id", 1)
+
+    plan = None
+    if data and data[2] == "UPSC":
+        c.execute("SELECT * FROM upsc_plan WHERE id=?", (current_id,))
+        plan = c.fetchone()
+
+    # 🔥 COUNT COMPLETED DAYS
+    c.execute("SELECT COUNT(*) FROM progress WHERE user=?", (user,))
+    completed_count = c.fetchone()[0]
+
     conn.close()
 
-    return render_template("mentorship.html", data=data)
+    return render_template(
+        "mentorship.html",
+        data=data,
+        plan=plan,
+        completed_count=completed_count   # 👈 ये भेजना जरूरी है
+    )
 
 # mentorship page reg
 
@@ -150,6 +175,51 @@ def delete_mentorship():
 @app.route("/reset_mentorship", methods=["POST"])
 def reset_mentorship():
     return redirect("/mentorship")
+
+
+#upsc mentorship bottons
+@app.route("/complete_day", methods=["POST"])
+def complete_day():
+    if "user" not in session:
+        return redirect("/")
+
+    user = session["user"]
+    current_id = session.get("plan_id", 1)
+
+    conn = sqlite3.connect("users.db")
+    c = conn.cursor()
+
+    # duplicate check
+    c.execute("SELECT * FROM progress WHERE user=? AND day_id=?", (user, current_id))
+    exist = c.fetchone()
+
+    if not exist:
+        c.execute("INSERT INTO progress (user, day_id, status) VALUES (?, ?, ?)",
+                  (user, current_id, "done"))
+
+    # max id
+    c.execute("SELECT MAX(id) FROM upsc_plan")
+    max_id = c.fetchone()[0]
+
+    if current_id < max_id:
+        session["plan_id"] = current_id + 1
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/mentorship")
+
+
+
+@app.route("/previous_day", methods=["POST"])
+def previous_day():
+    current_id = session.get("plan_id", 1)
+
+    if current_id > 1:
+        session["plan_id"] = current_id - 1
+
+    return redirect("/mentorship")
+
 
 
 
@@ -216,7 +286,9 @@ def login_user():
     user = c.fetchone()
 
     if user:
-        session["user"] = user[0]   # अब user[0] = email है ✅
+        session["user"] = user[0]   # email (backend use)
+        session["name"] = user[1]   # name (UI use) ✅
+
         conn.close()
         return jsonify({"status": "success"})
 

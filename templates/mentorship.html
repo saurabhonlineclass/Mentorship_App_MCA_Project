@@ -93,24 +93,81 @@
         <!-- <div class="tab">Email:<br> {{ data[1] }}</div> -->
 
         <div class="tab">Start Time ⌛: {{ data[4] }}</div>
-        <br>
       </div>
 
-      
-      <!-- DELETE -->
+
+      <!-- DELETE
       <form action="/delete_mentorship" method="POST">
         <button type="submit" class="danger-btn">❌ Delete Membership</button>
-      </form>
+      </form> -->
 
-      <br>
 
       <!-- RESET
       <form action="/reset_mentorship" method="POST">
         <button type="submit" class="secondary-btn">🔄 New Registration</button>
       </form> -->
 
+
+{% if data[2] != "UPSC" %}
+
+    <!-- 🚧 MESSAGE -->
+    <div class="no-plan">
+
+      <p>🚧 system currently available only for UPSC, Please try after sometime 🙏</p> <br>
+
+      <!-- DELETE BUTTON -->
+      <form action="/delete_mentorship" method="POST">
+        <button type="submit" class="delete-small">❌ Delete Membership</button>
+      </form>
+
+    </div>
+
+    {% endif %}
+
     </div>
     {% endif %}
+
+    {% if plan %}
+
+    <div class="top-bar">
+
+      <div class="tab">
+        ✅ Completed Days: {{ completed_count }}
+      </div>
+
+      <h4 class="tab">📅 Daily UPSC Plan</h4>
+
+
+      <form action="/delete_mentorship" method="POST">
+        <button type="submit" class="delete-small">❌ Delete Membership</button>
+      </form>
+
+    </div>
+
+
+    <div class="box-task">
+      <p><b>Day:</b> {{ plan[1] }}</p>
+      <p><b>Subject:</b> {{ plan[2] }}</p>
+      <p style="font-size: 20px;"><b>Topic:</b> {{ plan[3] }}</p>
+    </div>
+
+    <br>
+
+    <div class="btn-row">
+
+      <form action="/previous_day" method="POST">
+        <button type="submit" class="secondary-btn">⬅️ Last Uncomplete</button>
+      </form>
+
+      <form action="/complete_day" method="POST" onsubmit="sessionStorage.setItem('completed','true')">
+        <button type="submit" class="primary-btn">✅ Complete Day</button>
+      </form>
+
+    </div>
+
+    {% endif %}
+
+    
 
   </div>
 
@@ -128,6 +185,7 @@
 
   <!-- JS -->
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="{{ url_for('static', filename='mentorship.js') }}"></script>
 
 </body>
 

@@ -4,8 +4,6 @@
 <head>
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- ✅ FIXED CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -37,7 +35,7 @@
     </div>
 
     <div class="card">
-        <h2>Welcome,{{user}}🎉</h2>
+        <h2>Welcome, {{ name }} 🎉</h2>
         <p class="sub" style="text-align:center; margin-bottom:10px;">
             Your goal is closer than you think 📚
         </p>

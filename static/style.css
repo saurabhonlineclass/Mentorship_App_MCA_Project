@@ -775,3 +775,40 @@ li:hover {
 .w-100
 {width: 100%;
 }
+
+
+/*task mentorship box*/
+
+.box-task {
+  position: relative;
+  overflow: hidden;
+  height: 50%;
+  width: 99%;
+
+  background: linear-gradient(135deg, #2a2e3f, #1f2330);
+  padding: 16px 6px;
+  border-radius: 12px;
+  font-size: 13px;
+
+  text-align: center;
+  color: var(--text-main);
+
+  cursor: pointer;
+  transition: 0.3s;
+
+  box-shadow: 0 0 8px #00c6ff20;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: space-between; /* left + right */
+  align-items: center;
+  margin-top: 15px;
+}
+
+
+
